@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.horseraceapp.UserMenuController">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="119.0" style="-fx-background-color: lightblue;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label prefHeight="45.0" prefWidth="100.0" text="Horse Bet">
+               <font>
+                  <Font name="Arial Nova" size="21.0" />
+               </font>
+            </Label>
+            <Label fx:id="nick" prefHeight="17.0" prefWidth="125.0" text="[Nickname]" />
+            <Label fx:id="money" prefHeight="17.0" prefWidth="133.0" text="Stan Konta:" />
+            <ToggleButton fx:id="placeBet" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#placeBetClick" prefHeight="25.0" prefWidth="124.0" text="Obstaw Gonitwy" />
+            <ToggleButton fx:id="search" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#searchClick" prefHeight="25.0" prefWidth="153.0" text="Wyszukaj" />
+            <ToggleButton fx:id="topAcc" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#topAccClick" prefHeight="25.0" prefWidth="127.0" text="Doładuj Konto" />
+            <ToggleButton fx:id="history" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#historyClick" prefHeight="25.0" prefWidth="153.0" text="Historia Kuponów" />
+            <ToggleButton fx:id="manageAcc" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#manageAccClick" prefHeight="25.0" prefWidth="138.0" text="Zarządzaj Kontem" />
+         </children></VBox>
+   </children>
+</AnchorPane>
