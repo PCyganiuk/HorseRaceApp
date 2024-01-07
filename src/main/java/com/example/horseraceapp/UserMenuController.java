@@ -2,10 +2,13 @@ package com.example.horseraceapp;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ResourceBundle;
@@ -20,6 +23,13 @@ public class UserMenuController implements Initializable {
     String username;
     Double balance;
 
+    public void setNick(String username){
+        this.username = username;
+        nick.setText(this.username);
+        System.out.println(username);
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
@@ -30,7 +40,7 @@ public class UserMenuController implements Initializable {
         try {
             con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace","uzytkownik","user123");
             stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT nazwa_uzytkownika, saldo_konta FROM uzytkownicy");
+            ResultSet rs = stm.executeQuery("SELECT saldo_konta FROM uzytkownicy WHERE nazwa_uzytkownika = ?");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

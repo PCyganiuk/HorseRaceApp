@@ -33,6 +33,7 @@ public class LoginController implements Initializable {
     private ComboBox<String> type;
     Connection con;
     Statement stm;
+    String nazwa;
 
     @FXML
     protected void onLoginClick(ActionEvent actionEvent) throws SQLException, ClassNotFoundException, IOException {
@@ -40,18 +41,23 @@ public class LoginController implements Initializable {
         con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace","uzytkownik","user123");
         stm = con.createStatement();
         ResultSet rs = stm.executeQuery("SELECT nazwa_uzytkownika, haslo_uzytkownika, typ_konta FROM uzytkownicy");
-        String nazwa = login.getText();
+        nazwa = login.getText();
         String haslo = password.getText();
         String sel = type.getSelectionModel().getSelectedItem();
         boolean bad = true;
         while(rs.next()){
             if(Objects.equals(nazwa, rs.getString("nazwa_uzytkownika")) && Objects.equals(haslo,rs.getString("haslo_uzytkownika")) && sel.equals(rs.getString("typ_konta"))){
-               Parent root = FXMLLoader.load(getClass().getResource("user-menu.fxml"));
-                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("user-menu.fxml"));
+                Parent root;
+                root = (Parent) loader.load();
+                UserMenuController userMenuController = loader.getController();
+                userMenuController.setNick(nazwa);
+                //Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                Stage stage = new Stage();
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
+                System.out.println(nazwa);
                 stage.show();
-                //TODO next scene
                 System.out.println("login success");
                 bad = false;
                 break;
@@ -80,4 +86,6 @@ public class LoginController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         type.setItems(FXCollections.observableArrayList("Administrator", "Użytkownik", "Menadżer"));
     }
+
+    public String getUsername(){return nazwa;}
 }
