@@ -15,7 +15,6 @@
                </font>
             </Label>
             <Label fx:id="nick" prefHeight="17.0" prefWidth="125.0" text="[Nickname]" />
-            <Label text="Label" />
             <Label fx:id="money" prefHeight="17.0" prefWidth="133.0" text="Stan Konta:" />
             <ToggleButton fx:id="placeBet" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#placeBetClick" prefHeight="25.0" prefWidth="124.0" text="Obstaw Gonitwy" />
             <ToggleButton fx:id="search" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#searchClick" prefHeight="25.0" prefWidth="153.0" text="Wyszukaj" />
@@ -32,7 +31,7 @@
             <Button mnemonicParsing="false" text="Szukaj" />
          </children></FlowPane>
       <TableView layoutX="257.0" layoutY="119.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="95.0">
-         <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+         <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
          <columns>
           <TableColumn prefWidth="75.0" text="Koń" />
           <TableColumn prefWidth="75.0" text="Jeźdźca" />
