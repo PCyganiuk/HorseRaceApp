@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.horseraceapp.UserMenuController">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="119.0" spacing="3.0" style="-fx-background-color: red;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="46.0" prefWidth="129.0" text="Horse Bet">
+               <font>
+                  <Font name="Arial Nova" size="21.0" />
+               </font>
+            </Label>
+            <Label fx:id="nick" prefHeight="17.0" prefWidth="125.0" text="[Nickname]" />
+            <Label fx:id="money" prefHeight="17.0" prefWidth="133.0" text="Stan Konta:" />
+            <ToggleButton fx:id="placeBet" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#placeBetClick" prefHeight="25.0" prefWidth="124.0" text="Obstaw Gonitwy" />
+            <ToggleButton fx:id="search" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#searchClick" prefHeight="25.0" prefWidth="153.0" text="Wyszukaj" />
+            <ToggleButton fx:id="topAcc" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#topAccClick" prefHeight="25.0" prefWidth="127.0" text="Doładuj Konto" />
+            <ToggleButton fx:id="history" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#historyClick" prefHeight="25.0" prefWidth="153.0" text="Historia Kuponów" />
+            <ToggleButton fx:id="manageAcc" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#manageAccClick" prefHeight="25.0" prefWidth="138.0" text="Zarządzaj Kontem" />
+         </children>
+         <padding>
+            <Insets left="3.0" right="3.0" />
+         </padding></VBox>
+      <FlowPane layoutX="165.0" layoutY="59.0" prefHeight="26.0" prefWidth="384.0">
+         <children>
+            <TextField prefHeight="26.0" prefWidth="333.0" text="Wyszukaj konia, jeźdźcę, wyścig" />
+            <Button mnemonicParsing="false" text="Szukaj" />
+         </children></FlowPane>
+      <TableView layoutX="257.0" layoutY="119.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="95.0">
+         <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
+         <columns>
+          <TableColumn prefWidth="75.0" text="Koń" />
+          <TableColumn prefWidth="75.0" text="Jeźdźca" />
+            <TableColumn prefWidth="75.0" text="Wyścig" />
+            <TableColumn prefWidth="75.0" text="Kurs" />
+            <TableColumn prefWidth="75.0" text="Kwota" />
+            <TableColumn prefWidth="90.0" text="Data wyścigu" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
