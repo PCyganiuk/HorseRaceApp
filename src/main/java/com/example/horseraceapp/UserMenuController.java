@@ -23,28 +23,33 @@ public class UserMenuController implements Initializable {
     String username;
     Double balance;
 
-    public void setNick(String username){
+    public void setNickandBal(String username){
         this.username = username;
         nick.setText(this.username);
         System.out.println(username);
-    }
-
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         try {
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace","uzytkownik","user123");
+            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace","administrator","admin");
             stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT saldo_konta FROM uzytkownicy WHERE nazwa_uzytkownika = ?");
+            String sql = "SELECT saldo_konta FROM uzytkownicy WHERE nazwa_uzytkownika = ?";
+            PreparedStatement prp = con.prepareStatement(sql);
+            prp.setString(1,this.username);
+            ResultSet rs = prp.executeQuery();
+            rs.next();
+            balance = rs.getDouble("saldo_konta");
+            money.setText(balance+"zł");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
 
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
     }
 
     @FXML
