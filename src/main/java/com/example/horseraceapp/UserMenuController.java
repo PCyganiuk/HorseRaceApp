@@ -33,7 +33,7 @@ public class UserMenuController implements Initializable {
             throw new RuntimeException(e);
         }
         try {
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace","administrator","admin");
+            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace","uzytkownik","user123");
             stm = con.createStatement();
             String sql = "SELECT saldo_konta FROM uzytkownicy WHERE nazwa_uzytkownika = ?";
             PreparedStatement prp = con.prepareStatement(sql);
