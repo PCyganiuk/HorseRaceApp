@@ -30,15 +30,14 @@
             <TextField prefHeight="26.0" prefWidth="333.0" text="Wyszukaj konia, jeźdźcę, wyścig" />
             <Button mnemonicParsing="false" text="Szukaj" />
          </children></FlowPane>
-      <TableView layoutX="257.0" layoutY="119.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="95.0">
+      <TableView fx:id="betTable" layoutX="257.0" layoutY="119.0" prefHeight="293.0" prefWidth="405.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="66.0" AnchorPane.topAnchor="95.0">
          <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
          <columns>
-          <TableColumn prefWidth="75.0" text="Koń" />
-          <TableColumn prefWidth="75.0" text="Jeźdźca" />
-            <TableColumn prefWidth="75.0" text="Wyścig" />
-            <TableColumn prefWidth="75.0" text="Kurs" />
-            <TableColumn prefWidth="75.0" text="Kwota" />
-            <TableColumn prefWidth="90.0" text="Data wyścigu" />
+          <TableColumn fx:id="horseNameCol" prefWidth="75.0" text="Koń" />
+          <TableColumn fx:id="riderCol" prefWidth="75.0" text="Jeźdźca" />
+            <TableColumn fx:id="raceCol" prefWidth="75.0" text="Wyścig" />
+            <TableColumn fx:id="rateCol" prefWidth="75.0" text="Kurs" />
+            <TableColumn fx:id="dateCol" prefWidth="90.0" text="Data wyścigu" />
         </columns>
       </TableView>
    </children>
