@@ -40,7 +40,7 @@ public class LoginController implements Initializable {
         Class.forName("org.postgresql.Driver");
         con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace","uzytkownik","user123");
         stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("SELECT nazwa_uzytkownika, haslo_uzytkownika, typ_konta FROM uzytkownicy");
+        ResultSet rs = stm.executeQuery("SELECT nazwa_uzytkownika, haslo_uzytkownika, typ_konta FROM uzytkownicy;");
         nazwa = login.getText();
         String haslo = password.getText();
         String sel = type.getSelectionModel().getSelectedItem();
@@ -48,10 +48,11 @@ public class LoginController implements Initializable {
         while(rs.next()){
             if(Objects.equals(nazwa, rs.getString("nazwa_uzytkownika")) && Objects.equals(haslo,rs.getString("haslo_uzytkownika")) && sel.equals(rs.getString("typ_konta"))){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("user-menu.fxml"));
-                Parent root;
-                root = (Parent) loader.load();
+                URL location = loader.getLocation();
+                System.out.println(location);
+                Parent root = loader.load();
                 UserMenuController userMenuController = loader.getController();
-                userMenuController.setNick(nazwa);
+                userMenuController.setNickandBal(nazwa);
                 //Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
@@ -86,6 +87,4 @@ public class LoginController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         type.setItems(FXCollections.observableArrayList("Administrator", "Użytkownik", "Menadżer"));
     }
-
-    public String getUsername(){return nazwa;}
 }

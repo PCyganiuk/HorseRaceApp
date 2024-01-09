@@ -36,7 +36,7 @@ public class NewUserViewController {
     @FXML
     public void onCreateAccountClick() throws SQLException, ClassNotFoundException, InterruptedException {
         Class.forName("org.postgresql.Driver");
-        con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace","uzytkownik","user123");
+        con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace","administrator","admin");
         stm = con.createStatement();
         ResultSet rs = stm.executeQuery("SELECT nazwa_uzytkownika FROM uzytkownicy");
         String name = newLogin.getText();
