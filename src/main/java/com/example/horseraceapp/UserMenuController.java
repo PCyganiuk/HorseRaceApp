@@ -15,17 +15,7 @@ import java.util.ResourceBundle;
 
 public class UserMenuController implements Initializable {
     @FXML
-    TableView<Bet> betTable;
-    @FXML
-    TableColumn<Bet,String> horseNameCol;
-    @FXML
-    TableColumn<Bet,String> riderCol;
-    @FXML
-    TableColumn<Bet,String> raceCol;
-    @FXML
-    TableColumn<Bet,Double> rateCol;
-    @FXML
-    TableColumn<Bet,String> dateCol;
+    ListView<String> betList;
     @FXML
     Label nick;
     @FXML
@@ -54,11 +44,6 @@ public class UserMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        horseNameCol.setCellValueFactory(new PropertyValueFactory<>("Koń"));
-        riderCol.setCellValueFactory(new PropertyValueFactory<>("Jeźdźca"));
-        raceCol.setCellValueFactory(new PropertyValueFactory<>("Gonitwa"));
-        rateCol.setCellValueFactory(new PropertyValueFactory<>("Kurs"));
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("Data wyścigu"));
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -66,6 +51,12 @@ public class UserMenuController implements Initializable {
         }
         try {
             con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT * FROM bet_table");
+            betList.setCellFactory(param -> new BetCell());
+            while(rs.next()){
+                betList.getItems().add(rs.getString(1)+" • "+rs.getString(2)+" "+rs.getString(3)+" • "+ rs.getString(4)+" • "+rs.getString(6)+" "+rs.getString(7)+" • "+rs.getString(5));
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
