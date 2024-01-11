@@ -46,15 +46,14 @@ public class LoginController implements Initializable {
         String sel = type.getSelectionModel().getSelectedItem();
         boolean bad = true;
         while(rs.next()){
-            if(Objects.equals(nazwa, rs.getString("nazwa_uzytkownika")) && Objects.equals(haslo,rs.getString("haslo_uzytkownika")) && sel.equals(rs.getString("typ_konta"))){
+            if(Objects.equals(nazwa, rs.getString("nazwa_uzytkownika")) && Objects.equals(haslo,rs.getString("haslo_uzytkownika")) && sel.equals(rs.getString("typ_konta")) && sel.equals("Użytkownik")){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("user-menu.fxml"));
                 URL location = loader.getLocation();
                 System.out.println(location);
                 Parent root = loader.load();
                 UserMenuController userMenuController = loader.getController();
                 userMenuController.setNickAndBal(nazwa);
-                //Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                Stage stage = new Stage();
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
                 System.out.println(nazwa);
