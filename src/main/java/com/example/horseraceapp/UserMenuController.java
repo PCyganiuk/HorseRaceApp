@@ -5,8 +5,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.FlowPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,6 +16,20 @@ import java.sql.*;
 import java.util.ResourceBundle;
 
 public class UserMenuController implements Initializable {
+    @FXML
+    public ToggleButton placeBet;
+    @FXML
+    public ToggleButton search;
+    @FXML
+    public ToggleButton topAcc;
+    @FXML
+    public ToggleButton history;
+    @FXML
+    public ToggleButton manageAcc;
+    @FXML
+    public FlowPane fPane;
+    @FXML
+    public Label ref;
     @FXML
     ListView<String> betList;
     @FXML
@@ -24,6 +40,8 @@ public class UserMenuController implements Initializable {
     Statement stm;
     String username;
     Double balance;
+
+    Scene scene;
 
     public void setNickAndBal(String username) throws ClassNotFoundException, SQLException{
         this.username = username;
@@ -44,6 +62,18 @@ public class UserMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        placeBet.setSelected(true);
+        initScreen();
+    }
+
+    @FXML
+    private void placeBetClick(ActionEvent actionEvent){
+        placeBet.setSelected(true);
+        placeBetManage(true);
+        initScreen();
+    }
+
+    private void initScreen(){
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -55,21 +85,25 @@ public class UserMenuController implements Initializable {
             ResultSet rs = stm.executeQuery("SELECT * FROM bet_table");
             betList.setCellFactory(param -> new BetCell());
             while(rs.next()){
-                betList.getItems().add(rs.getString(1)+" • "+rs.getString(2)+" "+rs.getString(3)+" • "+ rs.getString(4)+" • "+rs.getString(6)+" "+rs.getString(7)+" • "+rs.getString(5));
+                betList.getItems().add(rs.getString("imie_konia")+" • "+rs.getString("imie_jezdzcy")+" "+rs.getString("nazwisko_jezdzcy")+" • "+rs.getString("opis_gonitwy")+" • "+rs.getString("data_wyscigu")+" "+rs.getString("czas")+" |"+rs.getString("kurs"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
-    @FXML
-    private void placeBetClick(ActionEvent actionEvent){
-
+    
+    private void placeBetManage(boolean vis){
+        betList.setVisible(vis);
+        ref.setVisible(vis);
+        fPane.setVisible(vis);
+        if(!vis){
+            betList.getItems().removeAll();
+        }
     }
 
     @FXML
     private void searchClick(ActionEvent actionEvent){
-
+        placeBetManage(false);
     }
     @FXML
     private void topAccClick(ActionEvent actionEvent){
@@ -83,5 +117,15 @@ public class UserMenuController implements Initializable {
     @FXML
     private void manageAccClick(ActionEvent actionEvent){
 
+    }
+
+    private void setVisibilityForAll(java.util.List<javafx.scene.Node> nodes, boolean visible) {
+        for (javafx.scene.Node node : nodes) {
+            node.setVisible(visible);
+        }
+    }
+
+    public void getScene(Scene scene){
+        this.scene = scene;
     }
 }
