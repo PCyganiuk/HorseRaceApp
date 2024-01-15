@@ -53,7 +53,6 @@ public class LoginController implements Initializable {
                 userMenuController.setNickAndBal(nazwa);
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root);
-                userMenuController.getScene(scene);
                 stage.setScene(scene);
                 System.out.println(nazwa);
                 stage.show();

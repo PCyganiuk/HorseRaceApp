@@ -17,15 +17,15 @@ import java.util.ResourceBundle;
 
 public class UserMenuController implements Initializable {
     @FXML
-    public ToggleButton placeBet;
+    public Button placeBet;
     @FXML
-    public ToggleButton search;
+    public Button search;
     @FXML
-    public ToggleButton topAcc;
+    public Button topAcc;
     @FXML
-    public ToggleButton history;
+    public Button history;
     @FXML
-    public ToggleButton manageAcc;
+    public Button manageAcc;
     @FXML
     public FlowPane fPane;
     @FXML
@@ -62,14 +62,14 @@ public class UserMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        placeBet.setSelected(true);
+        placeBet.setDisable(true);
         initScreen();
     }
 
     @FXML
     private void placeBetClick(ActionEvent actionEvent){
-        placeBet.setSelected(true);
         placeBetManage(true);
+        searchManage(false);
         initScreen();
     }
 
@@ -93,6 +93,7 @@ public class UserMenuController implements Initializable {
     }
     
     private void placeBetManage(boolean vis){
+        placeBet.setDisable(vis);
         betList.setVisible(vis);
         ref.setVisible(vis);
         fPane.setVisible(vis);
@@ -103,7 +104,11 @@ public class UserMenuController implements Initializable {
 
     @FXML
     private void searchClick(ActionEvent actionEvent){
+        searchManage(true);
         placeBetManage(false);
+    }
+    private void searchManage(boolean vis){
+        search.setDisable(vis);
     }
     @FXML
     private void topAccClick(ActionEvent actionEvent){
@@ -117,15 +122,5 @@ public class UserMenuController implements Initializable {
     @FXML
     private void manageAccClick(ActionEvent actionEvent){
 
-    }
-
-    private void setVisibilityForAll(java.util.List<javafx.scene.Node> nodes, boolean visible) {
-        for (javafx.scene.Node node : nodes) {
-            node.setVisible(visible);
-        }
-    }
-
-    public void getScene(Scene scene){
-        this.scene = scene;
     }
 }
