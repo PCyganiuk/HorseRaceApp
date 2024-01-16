@@ -4,8 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ResourceBundle;
@@ -13,6 +13,8 @@ import java.util.ResourceBundle;
 public class UserMenuController implements Initializable {
     @FXML
     public Button placeBet;
+    @FXML
+    AnchorPane anchorPane;
     @FXML
     public Button search;
     @FXML
@@ -27,6 +29,8 @@ public class UserMenuController implements Initializable {
     public Label ref;
     @FXML
     ListView<BetCell> betList;
+
+    ListView<String> searchList = new ListView<>();;
     @FXML
     Label nick;
     @FXML
@@ -62,14 +66,14 @@ public class UserMenuController implements Initializable {
     }
 
     @FXML
-    public void placeBetClick() throws IOException, ClassNotFoundException, SQLException {
-
+    public void placeBetClick() {
         placeBetManage(true);
         searchManage(false);
-        initBetScreen();
+        betList.getItems().clear();
+        initBetScreen("");
     }
 
-    private void initBetScreen(){
+    private void initBetScreen(String par){
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -78,7 +82,20 @@ public class UserMenuController implements Initializable {
         try {
             con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT * FROM bet_table");
+            ResultSet rs;
+            if(par.isEmpty())
+                rs = stm.executeQuery("SELECT * FROM bet_table");
+            else{
+                String sql = "SELECT * FROM bet_table WHERE " +
+                        "UPPER(imie_konia) LIKE UPPER(?) OR UPPER(imie_jezdzcy) LIKE UPPER(?) OR UPPER(nazwisko_jezdzcy) LIKE UPPER(?) OR UPPER(opis_gonitwy) LIKE UPPER(?)";
+                PreparedStatement prp = con.prepareStatement(sql);
+                prp.setString(1,"%"+par+"%");
+                prp.setString(2,"%"+par+"%");
+                prp.setString(3,"%"+par+"%");
+                prp.setString(4,"%"+par+"%");
+                rs = prp.executeQuery();
+            }
+
             betList.setCellFactory(param -> new BetCellFactory());
             while(rs.next()){
                 Button button = new Button("Zatwierdź");
@@ -125,13 +142,23 @@ public class UserMenuController implements Initializable {
     private void searchClick(ActionEvent actionEvent){
         searchManage(true);
         placeBetManage(false);
+        if(!anchorPane.getChildren().contains(searchList)) {
+            AnchorPane.setTopAnchor(searchList, 112.0);
+            AnchorPane.setBottomAnchor(searchList, 6.0);
+            AnchorPane.setLeftAnchor(searchList, 125.0);
+            AnchorPane.setRightAnchor(searchList, 11.0);
+            anchorPane.getChildren().add(searchList);
+        }
     }
     private void searchManage(boolean vis){
         search.setDisable(vis);
+        searchList.setVisible(vis);
     }
     @FXML
     private void topAccClick(ActionEvent actionEvent){
-
+    }
+    private void topAccManage(boolean vis){
+        topAcc.setDisable(vis);
     }
     @FXML
     private void historyClick(ActionEvent actionEvent){
@@ -145,7 +172,8 @@ public class UserMenuController implements Initializable {
 
     @FXML
     private void searchBarBetTyped(){
-        System.out.println("ok");
+        betList.getItems().clear();
+        initBetScreen(searchBarBet.getText().replace(" ",""));
     }
     private void updateBalance(Double newBalance){
         money.setText(newBalance + "zł");

@@ -67,7 +67,7 @@ public class NewUserViewController {
             prepStm.setDate(3,Date.valueOf(bDay));
             prepStm.setDouble(4,0.0);
             prepStm.setString(5,"Użytkownik");
-            int rowsAffected = prepStm.executeUpdate();
+            prepStm.executeUpdate();
             dialogStage.close();
         }
     }
