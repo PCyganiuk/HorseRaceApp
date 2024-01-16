@@ -51,10 +51,11 @@ public class LoginController implements Initializable {
                 Parent root = loader.load();
                 UserMenuController userMenuController = loader.getController();
                 userMenuController.setNickAndBal(nazwa);
+                //userMenuController.placeBetClick();
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
-                System.out.println(nazwa);
+                //System.out.println(nazwa);
                 stage.show();
                 System.out.println("login success");
                 bad = false;
@@ -83,5 +84,9 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         type.setItems(FXCollections.observableArrayList("Administrator", "Użytkownik", "Menadżer"));
+    }
+
+    public String getNazwa(){
+        return nazwa;
     }
 }

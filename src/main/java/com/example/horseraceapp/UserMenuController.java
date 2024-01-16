@@ -2,13 +2,8 @@ package com.example.horseraceapp;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.FlowPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,21 +22,20 @@ public class UserMenuController implements Initializable {
     @FXML
     public Button manageAcc;
     @FXML
-    public FlowPane fPane;
+    public TextField searchBarBet;
     @FXML
     public Label ref;
     @FXML
-    ListView<String> betList;
+    ListView<BetCell> betList;
     @FXML
     Label nick;
     @FXML
-    Label money;
+    public Label money;
     Connection con;
     Statement stm;
     String username;
-    Double balance;
-
-    Scene scene;
+    Integer user_id;
+    public Double balance;
 
     public void setNickAndBal(String username) throws ClassNotFoundException, SQLException{
         this.username = username;
@@ -49,31 +43,33 @@ public class UserMenuController implements Initializable {
         Class.forName("org.postgresql.Driver");
         con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
         stm = con.createStatement();
-        String sql = "SELECT saldo_konta FROM uzytkownicy WHERE nazwa_uzytkownika = ?";
+        String sql = "SELECT id_uzytkownika, saldo_konta FROM uzytkownicy WHERE nazwa_uzytkownika = ?";
         PreparedStatement prp = con.prepareStatement(sql);
         prp.setString(1, this.username);
         ResultSet rs = prp.executeQuery();
         rs.next();
+        user_id = rs.getInt("id_uzytkownika");
         balance = rs.getDouble("saldo_konta");
-        money.setText(balance + "zł");
-
+        updateBalance(balance);
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        placeBet.setDisable(true);
-        initScreen();
+        placeBetManage(false);
+//        placeBet.setDisable(true);
+//        initScreen();
     }
 
     @FXML
-    private void placeBetClick(ActionEvent actionEvent){
+    public void placeBetClick() throws IOException, ClassNotFoundException, SQLException {
+
         placeBetManage(true);
         searchManage(false);
-        initScreen();
+        initBetScreen();
     }
 
-    private void initScreen(){
+    private void initBetScreen(){
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -83,9 +79,32 @@ public class UserMenuController implements Initializable {
             con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT * FROM bet_table");
-            betList.setCellFactory(param -> new BetCell());
+            betList.setCellFactory(param -> new BetCellFactory());
             while(rs.next()){
-                betList.getItems().add(rs.getString("imie_konia")+" • "+rs.getString("imie_jezdzcy")+" "+rs.getString("nazwisko_jezdzcy")+" • "+rs.getString("opis_gonitwy")+" • "+rs.getString("data_wyscigu")+" "+rs.getString("czas")+" |"+rs.getString("kurs"));
+                Button button = new Button("Zatwierdź");
+                BetCell betCell = new BetCell(rs.getInt("id_udzialu")+"!"+rs.getString("imie_konia")+" • "+rs.getString("imie_jezdzcy")+" "+rs.getString("nazwisko_jezdzcy")+" • "+rs.getString("opis_gonitwy")+" • "+rs.getString("data_wyscigu")+" "+rs.getString("czas")+" |"+rs.getString("kurs"),button);
+                betCell.button.setOnMouseClicked(event -> {
+                    double kwota = Double.parseDouble(betCell.textField.getText());
+                    if(kwota <= balance && balance > 0.0){
+                        String sql = "INSERT INTO kupony(id_udzialu, kwota, kurs, status_kuponu, id_uzytkownika) VALUES(?,?,?,NULL,?)";
+                        try {
+                            PreparedStatement prp = con.prepareStatement(sql);
+                            prp.setInt(1, betCell.id_udzialu);
+                            prp.setDouble(2, kwota);
+                            prp.setDouble(3, betCell.kurs);
+                            prp.setInt(4, user_id);
+                            prp.executeUpdate();
+                            balance -= kwota;
+                            updateBalance(balance);
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    else{
+                        betCell.outcome.setText(" brak środków!");
+                    }
+                });
+                betList.getItems().add(betCell);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -96,7 +115,7 @@ public class UserMenuController implements Initializable {
         placeBet.setDisable(vis);
         betList.setVisible(vis);
         ref.setVisible(vis);
-        fPane.setVisible(vis);
+        searchBarBet.setVisible(vis);
         if(!vis){
             betList.getItems().removeAll();
         }
@@ -122,5 +141,13 @@ public class UserMenuController implements Initializable {
     @FXML
     private void manageAccClick(ActionEvent actionEvent){
 
+    }
+
+    @FXML
+    private void searchBarBetTyped(){
+        System.out.println("ok");
+    }
+    private void updateBalance(Double newBalance){
+        money.setText(newBalance + "zł");
     }
 }

@@ -25,12 +25,8 @@
          <padding>
             <Insets left="3.0" right="3.0" />
          </padding></VBox>
-      <FlowPane fx:id="fPane" layoutX="123.0" layoutY="59.0" prefHeight="26.0" prefWidth="426.0">
-         <children>
-            <TextField prefHeight="0.0" prefWidth="376.0" text="Wyszukaj konia, jeźdźcę, wyścig" />
-            <Button mnemonicParsing="false" prefHeight="0.0" prefWidth="50.0" text="Szukaj" />
-         </children></FlowPane>
       <ListView fx:id="betList" layoutX="125.0" layoutY="112.0" prefHeight="282.0" prefWidth="464.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="112.0" />
-      <Label fx:id="ref" layoutX="129.0" layoutY="85.0" prefHeight="25.0" prefWidth="458.0" text="Koń • Jeźdźca • Wyścig • Data" />
+      <Label fx:id="ref" layoutX="129.0" layoutY="85.0" prefHeight="25.0" prefWidth="458.0" text="Koń • Jeźdźca • Wyścig • Data" AnchorPane.leftAnchor="125.0" />
+      <TextField fx:id="searchBarBet" layoutX="260.0" layoutY="53.0" onKeyTyped="#searchBarBetTyped" promptText=" Wyszukaj konia, jeźdźcę, wyścig" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="53.0" />
    </children>
 </AnchorPane>
