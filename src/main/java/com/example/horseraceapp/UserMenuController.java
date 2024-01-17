@@ -28,7 +28,7 @@ public class UserMenuController implements Initializable {
     @FXML
     public Button history;
     @FXML
-    public Button manageAcc;
+    public Button startRace;
     @FXML
     public TextField searchBarBet;
     @FXML
@@ -41,6 +41,8 @@ public class UserMenuController implements Initializable {
     Label nick;
     @FXML
     public Label money;
+    ComboBox<String> startRdy = new ComboBox<>();
+    Button start = new Button("Rozpocznij");
     Connection con;
     Statement stm;
     String username;
@@ -83,6 +85,7 @@ public class UserMenuController implements Initializable {
         placeBetManage(true);
         searchManage(false);
         topAccManage(false);
+        startRaceManage(false);
         betList.getItems().clear();
         initBetScreen("");
     }
@@ -103,6 +106,7 @@ public class UserMenuController implements Initializable {
         searchManage(true);
         placeBetManage(false);
         topAccManage(false);
+        startRaceManage(false);
         searchTable.getColumns().clear();
         if(!anchorPane.getChildren().contains(searchTable)) {
             searchTable.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
@@ -136,6 +140,7 @@ public class UserMenuController implements Initializable {
     private void topAccClick(){
         searchManage(false);
         placeBetManage(false);
+        startRaceManage(false);
         topAccManage(true);
         if(!anchorPane.getChildren().contains(confirm)) {
             AnchorPane.setTopAnchor(top, 130.0);
@@ -176,14 +181,34 @@ public class UserMenuController implements Initializable {
     }
 
     @FXML
-    private void manageAccClick(ActionEvent actionEvent){
+    private void startRaceClick(ActionEvent actionEvent){
+        startRaceManage(true);
+        searchManage(false);
+        placeBetManage(false);
+        topAccManage(false);
+        if(!anchorPane.getChildren().contains(startRdy)) {
+            AnchorPane.setTopAnchor(startRdy, 175.0);
+            AnchorPane.setLeftAnchor(startRdy, 229.0);
+            AnchorPane.setRightAnchor(startRdy, 121.0);
 
+            AnchorPane.setTopAnchor(start, 205.0);
+            AnchorPane.setLeftAnchor(start, 308.0);
+            AnchorPane.setRightAnchor(start, 200.0);
+            anchorPane.getChildren().add(startRdy);
+            anchorPane.getChildren().add(start);
+        }
+
+    }
+    private void startRaceManage(boolean vis){
+        startRace.setDisable(vis);
+        startRdy.setVisible(vis);
+        start.setVisible(vis);
     }
 
     @FXML
     private void searchBarBetTyped(){
         betList.getItems().clear();
-        initBetScreen(searchBarBet.getText().replace(" ",""));
+        initBetScreen(searchBarBet.getText());
     }
     private void updateBalance(Double newBalance){
         money.setText(newBalance + "zł");
@@ -219,7 +244,7 @@ public class UserMenuController implements Initializable {
                 rs = stm.executeQuery("SELECT * FROM bet_table");
             else{
                 String sql = "SELECT * FROM bet_table WHERE " +
-                        "UPPER(imie_konia) LIKE UPPER(?) OR UPPER(imie_jezdzcy || bet_table.nazwisko_jezdzcy) LIKE UPPER(?) OR UPPER(opis_gonitwy) LIKE UPPER(?)";
+                        "UPPER(imie_konia) LIKE UPPER(?) OR UPPER(imie_jezdzcy || ' ' || bet_table.nazwisko_jezdzcy) LIKE UPPER(?) OR UPPER(opis_gonitwy) LIKE UPPER(?)";
                 PreparedStatement prp = con.prepareStatement(sql);
                 prp.setString(1,"%"+par+"%");
                 prp.setString(2,"%"+par+"%");
@@ -244,6 +269,7 @@ public class UserMenuController implements Initializable {
                             prp.executeUpdate();
                             balance -= kwota;
                             updateBalance(balance);
+                            button.setText("✓");
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }

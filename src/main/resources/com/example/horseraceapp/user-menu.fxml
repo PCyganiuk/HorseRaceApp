@@ -20,7 +20,7 @@
             <Button fx:id="search" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#searchClick" prefHeight="25.0" prefWidth="153.0" text="Wyszukaj" />
             <Button fx:id="topAcc" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#topAccClick" prefHeight="25.0" prefWidth="127.0" text="Doładuj Konto" />
             <Button fx:id="history" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#historyClick" prefHeight="25.0" prefWidth="153.0" text="Historia Kuponów" />
-            <Button fx:id="manageAcc" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#manageAccClick" prefHeight="25.0" prefWidth="138.0" text="Zarządzaj Kontem" />
+            <Button fx:id="startRace" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#startRaceClick" prefHeight="25.0" prefWidth="138.0" text="Start Gonitwy" />
          </children>
          <padding>
             <Insets left="3.0" right="3.0" />
