@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.horseraceapp.AdminMenuController">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="200.0" spacing="10.0" style="-fx-background-color: #336699;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="46.0" prefWidth="208.0" style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;" text="Menu Admina" />
+            <Label fx:id="nick" prefHeight="17.0" prefWidth="125.0" text="[Nickname]" />
+            <Button fx:id="addRemoveHorseButton" onAction="#handleAddRemoveHorse" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Dodawanie/Usuwanie Koni" />
+            <Button fx:id="scheduleButton" onAction="#handleSchedule" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Układanie Harmonogramu" />
+            <Button fx:id="horseStatsButton" onAction="#handleHorseStats" prefWidth="160.0" style="-fx-background-color: #f0f0f0;" text="Przeglądanie Statystyk Koni" />
+            <Button fx:id="confirmWinButton" onAction="#handleConfirmWin" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Potwierdzenie Wygranej" />
+            <Button fx:id="controlOddsButton" onAction="#handleControlOdds" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Kontrolowanie Kursów" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>
