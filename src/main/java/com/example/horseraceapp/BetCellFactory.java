@@ -15,7 +15,6 @@ public class BetCellFactory extends ListCell<BetCell> {
     private final Label label = new Label();
     private final Label outcome = new Label();
     private final Label kursL = new Label();
-    //private final TextField textField = new TextField();
     private Double pot = 0.0;
     private Double kurs;
     boolean l = true;

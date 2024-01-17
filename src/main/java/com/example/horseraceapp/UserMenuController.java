@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
@@ -35,7 +36,7 @@ public class UserMenuController implements Initializable {
     @FXML
     ListView<BetCell> betList;
     public TextField searchBarSearch = new TextField();
-    TableView<SearchHorse> searchTable = new TableView<SearchHorse>();
+    TableView<SearchHorse> searchTable = new TableView<>();
     @FXML
     Label nick;
     @FXML
@@ -45,6 +46,15 @@ public class UserMenuController implements Initializable {
     String username;
     Integer user_id;
     public Double balance;
+    private TextFormatter<String> numericFormat = new TextFormatter<>(change -> {
+        String newText = change.getControlNewText();
+        if (newText.matches("[0-9]*\\.?[0-9]*")) {
+            return change;  // Allow the change
+        }
+        else {
+            return null;    // Reject the change
+        }
+    });
 
     public void setNickAndBal(String username) throws ClassNotFoundException, SQLException{
         this.username = username;
@@ -66,8 +76,6 @@ public class UserMenuController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         placeBetManage(false);
-//        placeBet.setDisable(true);
-//        initScreen();
     }
 
     @FXML
@@ -121,15 +129,46 @@ public class UserMenuController implements Initializable {
         searchBarSearch.setText("");
         searchBarSearch.setVisible(vis);
     }
+    TextField amount = new TextField();
+    Button confirm = new Button("Zatwierdź");
+    Label top = new Label("Doładuj Konto");
     @FXML
-    private void topAccClick(ActionEvent actionEvent){
+    private void topAccClick(){
         searchManage(false);
         placeBetManage(false);
         topAccManage(true);
+        if(!anchorPane.getChildren().contains(confirm)) {
+            AnchorPane.setTopAnchor(top, 130.0);
+            AnchorPane.setLeftAnchor(top, 284.0);
+            AnchorPane.setRightAnchor(top, 167.0);
+            top.setAlignment(Pos.CENTER);
+            AnchorPane.setTopAnchor(confirm, 200.0);
+            AnchorPane.setLeftAnchor(confirm, 320.0);
+            AnchorPane.setRightAnchor(confirm, 204.0);
+            confirm.setPrefWidth(50.0);
+            confirm.setOnMouseClicked(event -> {
+                if(!amount.getText().isEmpty()) {
+                    balance += Double.parseDouble(amount.getText());
+                    updateBalance(balance);
+                }
+            });
+
+            AnchorPane.setTopAnchor(amount, 163.0);
+            AnchorPane.setLeftAnchor(amount, 284.0);
+            AnchorPane.setRightAnchor(amount, 167.0);
+            amount.setPromptText("Wartość doładowania");
+            amount.setTextFormatter(numericFormat);
+            anchorPane.getChildren().add(amount);
+            anchorPane.getChildren().add(top);
+            anchorPane.getChildren().add(confirm);
+        }
     }
     private void topAccManage(boolean vis){
         topAcc.setDisable(vis);
-
+        confirm.setVisible(vis);
+        amount.setVisible(vis);
+        top.setVisible(vis);
+        amount.setText("");
     }
     @FXML
     private void historyClick(ActionEvent actionEvent){
@@ -148,6 +187,22 @@ public class UserMenuController implements Initializable {
     }
     private void updateBalance(Double newBalance){
         money.setText(newBalance + "zł");
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
+            String sql = "UPDATE uzytkownicy SET saldo_konta = ? WHERE id_uzytkownika = ?";
+            PreparedStatement prp = con.prepareStatement(sql);
+            prp.setDouble(1,newBalance);
+            prp.setInt(2,user_id);
+            prp.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private void initBetScreen(String par){
