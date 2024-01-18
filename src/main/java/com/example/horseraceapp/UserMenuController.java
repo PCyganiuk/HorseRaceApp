@@ -295,9 +295,9 @@ public class UserMenuController implements Initializable {
             Statement stm = con.createStatement();
             ResultSet rs;
             if(par.isEmpty())
-                rs = stm.executeQuery("SELECT * FROM horse_statisctics");
+                rs = stm.executeQuery("SELECT * FROM horse_statistics");
             else{
-                String sql = "SELECT * FROM horse_statisctics WHERE UPPER(imie_konia) LIKE UPPER(?)";
+                String sql = "SELECT * FROM horse_statistics WHERE UPPER(imie_konia) LIKE UPPER(?)";
                 PreparedStatement prp = con.prepareStatement(sql);
                 prp.setString(1,"%"+par+"%");
                 rs = prp.executeQuery();
