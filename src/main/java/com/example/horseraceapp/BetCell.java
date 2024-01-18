@@ -30,6 +30,8 @@ public class BetCell {
                 outcome.setText(" "+pot+"zł");
             }
             else {
+                String k = kursL.getText().replace("x","");
+                kurs = Double.parseDouble(k);
                 pot = kurs * Double.parseDouble(newValue);
                 outcome.setText(" " +df.format(pot) + "zł");
             }
