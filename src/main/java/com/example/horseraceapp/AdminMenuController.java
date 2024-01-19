@@ -1,6 +1,7 @@
 package com.example.horseraceapp;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 
 public class AdminMenuController {
     public void handleAddRemoveHorse(ActionEvent actionEvent) {

@@ -83,7 +83,7 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        type.setItems(FXCollections.observableArrayList("Administrator", "Użytkownik", "Menadżer"));
+        type.setItems(FXCollections.observableArrayList("Administrator", "Użytkownik"));
     }
 
     public String getNazwa(){

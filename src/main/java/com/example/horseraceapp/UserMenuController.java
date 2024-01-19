@@ -12,8 +12,12 @@ import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
+import static java.sql.DriverManager.getConnection;
 import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY;
 
 public class UserMenuController implements Initializable {
@@ -48,7 +52,7 @@ public class UserMenuController implements Initializable {
     String username;
     Integer user_id;
     public Double balance;
-    private TextFormatter<String> numericFormat = new TextFormatter<>(change -> {
+    private final TextFormatter<String> numericFormat = new TextFormatter<>(change -> {
         String newText = change.getControlNewText();
         if (newText.matches("[0-9]*\\.?[0-9]*")) {
             return change;  // Allow the change
@@ -62,7 +66,7 @@ public class UserMenuController implements Initializable {
         this.username = username;
         nick.setText(this.username);
         Class.forName("org.postgresql.Driver");
-        con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
+        con = getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
         stm = con.createStatement();
         String sql = "SELECT id_uzytkownika, saldo_konta FROM uzytkownicy WHERE nazwa_uzytkownika = ?";
         PreparedStatement prp = con.prepareStatement(sql);
@@ -179,6 +183,7 @@ public class UserMenuController implements Initializable {
     private void historyClick(ActionEvent actionEvent){
 
     }
+    Label startInfo = new Label("Wybierz gonitwę do rozegrania");
 
     @FXML
     private void startRaceClick(ActionEvent actionEvent){
@@ -187,22 +192,74 @@ public class UserMenuController implements Initializable {
         placeBetManage(false);
         topAccManage(false);
         if(!anchorPane.getChildren().contains(startRdy)) {
-            AnchorPane.setTopAnchor(startRdy, 175.0);
+            AnchorPane.setTopAnchor(startInfo, 105.0);
+            AnchorPane.setLeftAnchor(startInfo, 229.0);
+            AnchorPane.setRightAnchor(startInfo, 121.0);
+
+            AnchorPane.setTopAnchor(startRdy, 135.0);
             AnchorPane.setLeftAnchor(startRdy, 229.0);
             AnchorPane.setRightAnchor(startRdy, 121.0);
 
-            AnchorPane.setTopAnchor(start, 205.0);
+            AnchorPane.setTopAnchor(start, 165.0);
             AnchorPane.setLeftAnchor(start, 308.0);
             AnchorPane.setRightAnchor(start, 200.0);
+            startInfo.setAlignment(Pos.CENTER);
+            anchorPane.getChildren().add(startInfo);
             anchorPane.getChildren().add(startRdy);
             anchorPane.getChildren().add(start);
         }
+        ObservableList<String> race = FXCollections.observableArrayList();
+        ArrayList<Integer> idx = new ArrayList<>();
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            con = getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
+            String sql = "SELECT DISTINCT gonitwy.id_gonitwy, gonitwy.opis_gonitwy, gonitwy.data_wyscigu, gonitwy.czas FROM gonitwy INNER JOIN public.udzial_w_gonitwach uwg on gonitwy.id_gonitwy = uwg.id_gonitwy WHERE uwg.wynik_konia IS NULL";
+            PreparedStatement prp = con.prepareStatement(sql);
+            ResultSet rs = prp.executeQuery();
+            while(rs.next()){
+                race.add(rs.getString("opis_gonitwy")+" "+rs.getString("data_wyscigu")+" "+rs.getString("czas"));
+                idx.add(rs.getInt("id_gonitwy"));
+            }
+            startRdy.setItems(race);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        start.setOnMouseClicked(mouseEvent -> {
+            try {
+                int i = startRdy.getSelectionModel().getSelectedIndex();
+                con = getConnection("jdbc:postgresql://localhost:5432/HorseRace", "administrator", "admin");
+                String sql = "SELECT id_udzialu, kurs FROM udzial_w_gonitwach WHERE id_gonitwy = ?;";
+                PreparedStatement prp = con.prepareStatement(sql);
+                prp.setInt(1,i);
+                ResultSet rs = prp.executeQuery();
+                ArrayList<Integer> udzial = new ArrayList<>();
+                while(rs.next()){
+                    udzial.add(rs.getInt("id_udzialu"));
+                }
+                Collections.shuffle(udzial);
+                for(int j = 0; j< udzial.size();j++){
+                    sql = "UPDATE udzial_w_gonitwach SET wynik_konia = ? WHERE id_udzialu = ?;";
+                    PreparedStatement prp2 = con.prepareStatement(sql);
+                    prp2.setInt(1,j+1);
+                    prp2.setInt(2,udzial.get(j));
+                    //@TODO zignourj ten błąd to jakiś bug graficzny czy coś
+                    prp2.executeUpdate();
+                }
 
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
     private void startRaceManage(boolean vis){
         startRace.setDisable(vis);
         startRdy.setVisible(vis);
         start.setVisible(vis);
+        startInfo.setVisible(vis);
     }
 
     @FXML
@@ -218,7 +275,7 @@ public class UserMenuController implements Initializable {
             throw new RuntimeException(e);
         }
         try {
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
+            con = getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
             String sql = "UPDATE uzytkownicy SET saldo_konta = ? WHERE id_uzytkownika = ?";
             PreparedStatement prp = con.prepareStatement(sql);
             prp.setDouble(1,newBalance);
@@ -237,7 +294,7 @@ public class UserMenuController implements Initializable {
             throw new RuntimeException(e);
         }
         try {
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
+            con = getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
             Statement stm = con.createStatement();
             ResultSet rs;
             if(par.isEmpty())
@@ -291,7 +348,7 @@ public class UserMenuController implements Initializable {
             throw new RuntimeException(e);
         }
         try {
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
+            con = getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
             Statement stm = con.createStatement();
             ResultSet rs;
             if(par.isEmpty())
