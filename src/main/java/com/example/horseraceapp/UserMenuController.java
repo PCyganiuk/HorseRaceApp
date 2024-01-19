@@ -242,11 +242,10 @@ public class UserMenuController implements Initializable {
                 }
                 Collections.shuffle(udzial);
                 for(int j = 0; j< udzial.size();j++){
-                    sql = "UPDATE udzial_w_gonitwach SET wynik_konia = ? WHERE id_udzialu = ?;";
-                    PreparedStatement prp2 = con.prepareStatement(sql);
+                    String sql2 = "UPDATE udzial_w_gonitwach SET wynik_konia = ? WHERE id_udzialu = ?;";
+                    PreparedStatement prp2 = con.prepareStatement(sql2);
                     prp2.setInt(1,j+1);
                     prp2.setInt(2,udzial.get(j));
-                    //@TODO zignourj ten błąd to jakiś bug graficzny czy coś
                     prp2.executeUpdate();
                 }
 
