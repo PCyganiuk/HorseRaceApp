@@ -4,6 +4,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.text.Font;
 
 import java.text.DecimalFormat;
 
@@ -13,27 +14,33 @@ public class BetCell {
     Double kurs;
     Double pot = 0.0;
     Button button;
-    Label label;
-    Label outcome;
-    Label kursL;
+    Label outcome = new Label(" = 0.0zł");
+    Label kursL = new Label();
     TextField textField = new TextField();
     private final DecimalFormat df = new DecimalFormat("0.00");
 
     public BetCell(String item, Button button){
-        this.item = item;
+        String[] split = item.split("!");
+        this.id_udzialu = Integer.parseInt(split[0]);
         this.button = button;
+        this.button.setText("Zatwierdź");
+        String[] split2 = split[1].split("\\|");
+        this.kurs = Double.parseDouble(split2[1]);
+        this.kursL.setText(" x"+ kurs);
+        this.item = split2[0];
+        this.outcome.setFont(new Font(14));
         textField.setPrefWidth(70.0);
         textField.setPrefHeight(8.0);
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("zmiana");
             if(textField.getText().isEmpty()) {
                 pot = 0.0;
-                outcome.setText(" "+pot+"zł");
+                outcome.setText(" = "+pot+"zł");
             }
             else {
-                String k = kursL.getText().replace("x","");
-                kurs = Double.parseDouble(k);
+                kurs = Double.parseDouble(kursL.getText().replace("x",""));
                 pot = kurs * Double.parseDouble(newValue);
-                outcome.setText(" " +df.format(pot) + "zł");
+                outcome.setText(" = " +df.format(pot) + "zł");
             }
         });
         TextFormatter<String> numericFormat = new TextFormatter<>(change -> {
