@@ -4,17 +4,64 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.util.Callback?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.horseraceapp.AdminMenuController">
    <children>
+      <VBox fx:id="addvBox" layoutX="200.0" layoutY="20.0" spacing="10.0" visible="false">
+         <children>
+            <TextField fx:id="imie_konia" promptText="Imie konia"/>
+            <TextField fx:id="rasa_konia" promptText="Rasa konia"/>
+            <TextField fx:id="plec_konia" promptText="Plec konia"/>
+            <DatePicker fx:id="data_urodzenia" promptText="data urodzenia"/>
+            <Button fx:id="addHorseButton" onAction="#handleAddRemoveHorse" text="Dodaj konia"/>
+         </children>
+      </VBox>
+      <VBox fx:id="statsVBox" layoutX="200.0" layoutY="200.0" spacing="10.0" visible="false">
+         <children>
+            <TextField fx:id="searchField" promptText="Wyszukaj konia" maxWidth="200.0"/>
+
+            <TableView fx:id="tableHorseStats" prefHeight="200.0" prefWidth="580.0">
+               <columns>
+                  <TableColumn text="ID Udziału"/>
+                  <TableColumn text="Imię Konia"/>
+                  <TableColumn text="ID Gonitwy"/>
+                  <TableColumn text="ID Jeźdzcy"/>
+                  <TableColumn text="Kurs"/>
+                  <TableColumn text="Wynik Konia"/>
+
+               </columns>
+            </TableView>
+            <TableView fx:id="tableViewWinKupony">
+               <columns>
+                  <TableColumn fx:id="idKuponuColumn" text="ID Kuponu">
+                     <cellValueFactory><PropertyValueFactory property="idKuponu" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="idUdzialuColumn" text="ID Udziału">
+                     <cellValueFactory><PropertyValueFactory property="idUdzialu" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="kwotaColumn" text="Kwota">
+                     <cellValueFactory><PropertyValueFactory property="kwota" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="kursColumn" text="Kurs">
+                     <cellValueFactory><PropertyValueFactory property="kurs" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="actionColumn" text="Akcje" />
+               </columns>
+            </TableView>
+         </children>
+      </VBox>
       <VBox prefHeight="400.0" prefWidth="200.0" spacing="10.0" style="-fx-background-color: #336699;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label alignment="CENTER" prefHeight="46.0" prefWidth="208.0" style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;" text="Menu Admina" />
-            <Label fx:id="nick" prefHeight="17.0" prefWidth="125.0" text="[Nickname]" />
-            <Button fx:id="addRemoveHorseButton" onAction="#handleAddRemoveHorse" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Dodawanie/Usuwanie Koni" />
+            <Label fx:id="adminNick" prefHeight="17.0" prefWidth="125.0" text="Admin Nick" />
+            <Label fx:id="money" prefHeight="17.0" prefWidth="133.0" text="Stan Konta:" />
+            <Button fx:id="addRemoveHorseButton" onAction="#showAddHorseInterface" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Dodawanie/Usuwanie Koni" />
             <Button fx:id="scheduleButton" onAction="#handleSchedule" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Układanie Harmonogramu" />
             <Button fx:id="horseStatsButton" onAction="#handleHorseStats" prefWidth="160.0" style="-fx-background-color: #f0f0f0;" text="Przeglądanie Statystyk Koni" />
             <Button fx:id="confirmWinButton" onAction="#handleConfirmWin" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Potwierdzenie Wygranej" />
             <Button fx:id="controlOddsButton" onAction="#handleControlOdds" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Kontrolowanie Kursów" />
+
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
