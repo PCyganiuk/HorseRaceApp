@@ -234,21 +234,48 @@ public class UserMenuController implements Initializable {
                 con = getConnection("jdbc:postgresql://localhost:5432/HorseRace", "administrator", "admin");
                 String sql = "SELECT id_udzialu, kurs FROM udzial_w_gonitwach WHERE id_gonitwy = ?;";
                 PreparedStatement prp = con.prepareStatement(sql);
-                prp.setInt(1,i);
+                prp.setInt(1,idx.get(i));
                 ResultSet rs = prp.executeQuery();
                 ArrayList<Integer> udzial = new ArrayList<>();
                 while(rs.next()){
                     udzial.add(rs.getInt("id_udzialu"));
                 }
                 Collections.shuffle(udzial);
+                int winId = udzial.get(0);
                 for(int j = 0; j< udzial.size();j++){
                     String sql2 = "UPDATE udzial_w_gonitwach SET wynik_konia = ? WHERE id_udzialu = ?;";
                     PreparedStatement prp2 = con.prepareStatement(sql2);
                     prp2.setInt(1,j+1);
                     prp2.setInt(2,udzial.get(j));
                     prp2.executeUpdate();
+                    String sql3 = "UPDATE kupony SET status_kuponu = ? WHERE id_udzialu = ?";
+                    PreparedStatement prp3 = con.prepareStatement(sql3);
+                    if(j==0)
+                        prp3.setBoolean(1,true);
+                    else
+                        prp3.setBoolean(1,false);
+                    prp3.setInt(2,udzial.get(j));
+                    prp3.executeUpdate();
+                    if(j == 0) {
+                        String sql4 = "SELECT id_uzytkownika, kwota, kurs FROM kupony WHERE id_udzialu = ?";
+                        PreparedStatement prp4 = con.prepareStatement(sql4);
+                        prp4.setInt(1, udzial.get(j));
+                        ResultSet rs2 = prp4.executeQuery();
+                        while(rs2.next()){
+                            String sql5 = "UPDATE uzytkownicy SET saldo_konta = saldo_konta + ? WHERE id_uzytkownika = ?";
+                            PreparedStatement prp5 = con.prepareStatement(sql5);
+                            prp5.setDouble(1,rs2.getDouble("kwota")* rs2.getDouble("kurs"));
+                            prp5.setInt(2,rs2.getInt("id_uzytkownika"));
+                            prp5.executeUpdate();
+                            if(rs2.getInt("id_uzytkownika")== user_id) {
+                                balance += rs2.getDouble("kwota") * rs2.getDouble("kurs");
+                                money.setText(balance + "zł");
+                                System.out.println("wygrałeś");
+                            }
+                        }
+                    }
                 }
-
+                startRdy.getItems().remove(i);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
