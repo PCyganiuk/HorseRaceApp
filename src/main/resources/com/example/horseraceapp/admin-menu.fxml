@@ -23,13 +23,12 @@
 
             <TableView fx:id="tableHorseStats" prefHeight="200.0" prefWidth="580.0">
                <columns>
-                  <TableColumn text="ID Udziału"/>
-                  <TableColumn text="Imię Konia"/>
-                  <TableColumn text="ID Gonitwy"/>
-                  <TableColumn text="ID Jeźdzcy"/>
-                  <TableColumn text="Kurs"/>
-                  <TableColumn text="Wynik Konia"/>
-
+                  <TableColumn fx:id="idUdzialuColumn" text="ID Udziału" />
+                  <TableColumn fx:id="idKoniaColumn" text="ID Konia" />
+                  <TableColumn fx:id="idGonitwyColumn" text="ID Gonitwy" />
+                  <TableColumn fx:id="idJezdzcyColumn" text="ID Jeźdzcy" />
+                  <TableColumn fx:id="kursColumn" text="Kurs" />
+                  <TableColumn fx:id="wynikKoniaColumn" text="Wynik Konia" />
                </columns>
             </TableView>
             <TableView fx:id="tableViewWinKupony">
@@ -37,14 +36,20 @@
                   <TableColumn fx:id="idKuponuColumn" text="ID Kuponu">
                      <cellValueFactory><PropertyValueFactory property="idKuponu" /></cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="idUdzialuColumn" text="ID Udziału">
+                  <TableColumn fx:id="idUdzialuKuponColumn" text="ID Udziału">
                      <cellValueFactory><PropertyValueFactory property="idUdzialu" /></cellValueFactory>
                   </TableColumn>
                   <TableColumn fx:id="kwotaColumn" text="Kwota">
                      <cellValueFactory><PropertyValueFactory property="kwota" /></cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="kursColumn" text="Kurs">
+                  <TableColumn fx:id="kursWinKuponyColumn" text="Kurs">
                      <cellValueFactory><PropertyValueFactory property="kurs" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="statusKuponu" text="statusKuponu">
+                     <cellValueFactory><PropertyValueFactory property="kurs" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="idUzytkownika" text="ID Uzytkownika">
+                     <cellValueFactory><PropertyValueFactory property="idUzytkownika" /></cellValueFactory>
                   </TableColumn>
                   <TableColumn fx:id="actionColumn" text="Akcje" />
                </columns>
