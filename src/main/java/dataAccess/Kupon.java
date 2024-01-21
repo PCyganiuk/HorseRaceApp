@@ -5,12 +5,13 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class Kupon {
-    private SimpleIntegerProperty idKuponu;
-    private SimpleIntegerProperty idUdzialu;
-    private SimpleDoubleProperty kwota;
-    private SimpleDoubleProperty kurs;
-    private SimpleBooleanProperty statusKuponu;
-    private SimpleIntegerProperty idUzytkownika;
+    private SimpleIntegerProperty idKuponu = new SimpleIntegerProperty(this, "idKuponu");
+    private SimpleIntegerProperty idUdzialu = new SimpleIntegerProperty(this, "idUdzialu");
+    private SimpleDoubleProperty kwota = new SimpleDoubleProperty(this, "kwota");
+    private SimpleDoubleProperty kurs = new SimpleDoubleProperty(this, "kurs");
+    private SimpleBooleanProperty statusKuponu = new SimpleBooleanProperty(this, "statusKuponu");
+    private SimpleIntegerProperty idUzytkownika = new SimpleIntegerProperty(this, "idUzytkownika");
+
 
     public int getIdKuponu() {
         return idKuponu.get();

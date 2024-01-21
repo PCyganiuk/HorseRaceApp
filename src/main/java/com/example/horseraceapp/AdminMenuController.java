@@ -1,6 +1,5 @@
 package com.example.horseraceapp;
 
-import dataAccess.Horse;
 import dataAccess.Kupon;
 import dataAccess.StatystykiKonia;
 import javafx.collections.FXCollections;
@@ -39,6 +38,34 @@ public class AdminMenuController {
     @FXML
     private TableView<StatystykiKonia> tableHorseStats;
     @FXML
+    private TableColumn<StatystykiKonia, Integer> idUdzialuKuponColumn;
+    @FXML
+    private TableColumn<StatystykiKonia, Integer> idKoniaColumn;
+    @FXML
+    private TableColumn<StatystykiKonia, Integer> idKuponuColumn;
+    @FXML
+    private TableColumn<StatystykiKonia, Integer> kwotaColumn;
+
+    @FXML
+    private TableColumn<StatystykiKonia, Integer> idGonitwyColumn;
+    @FXML
+    private TableColumn<StatystykiKonia, Integer> idJezdzcyColumn;
+    @FXML
+    private TableColumn<StatystykiKonia, Double> kursColumn;
+    @FXML
+    private TableColumn<StatystykiKonia, Double> idUdzialuColumn;
+
+    @FXML
+    private TableColumn<StatystykiKonia, Double> kursWinKuponyColumn;
+    @FXML
+    private TableColumn<StatystykiKonia, Double> wynikKoniaColumn;
+    @FXML
+    private TableColumn<StatystykiKonia, Boolean> statusKuponu;
+    @FXML
+    private TableColumn<StatystykiKonia, Integer> idUzytkownika;
+
+
+    @FXML
     private TextField searchField;
     @FXML
     private VBox statsVBox;
@@ -46,14 +73,7 @@ public class AdminMenuController {
     private VBox addvBox;
     @FXML
     private TableView<Kupon> tableViewWinKupony;
-    @FXML
-    private TableColumn<Kupon, Integer> idKuponuColumn;
-    @FXML
-    private TableColumn<Kupon, Integer> idUdzialuColumn;
-    @FXML
-    private TableColumn<Kupon, Double> kwotaColumn;
-    @FXML
-    private TableColumn<Kupon, Double> kursColumn;
+
     @FXML
     private TableColumn<Kupon, Void> actionColumn;
 
@@ -186,25 +206,24 @@ public class AdminMenuController {
         tableViewWinKupony.setVisible(false);
         ObservableList<StatystykiKonia> horseStats = FXCollections.observableArrayList();
 
-        String sql = "SELECT u.id_udzialu, k.imie_konia, u.id_gonitwy, u.id_jezdzcy, u.kurs, u.wynik_konia " +
-                "FROM udzial_w_gonitwach u JOIN konie k ON u.id_konia = k.id_konia;";
+        String sql = "SELECT u.id_udzialu, u.id_konia, u.id_jezdzcy, u.kurs, u.wynik_konia,u.id_gonitwy\n" +
+                "FROM udzial_w_gonitwach u JOIN konie k ON u.id_konia = k.id_konia;\n";
 
         try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/HorseRace1", "administrator", "admin");
              Statement stmt = con.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                Horse horse = new Horse();
-                horse.setImieKonia(rs.getString("imie_konia"));
-
                 StatystykiKonia statystyki = new StatystykiKonia();
-                statystyki.setKon(horse);
+                // Ustawianie wartości dla obiektu statystyki
                 statystyki.setIdUdzialu(rs.getInt("id_udzialu"));
+                statystyki.setIdKonia(rs.getInt("id_konia"));
                 statystyki.setIdGonitwy(rs.getInt("id_gonitwy"));
                 statystyki.setIdJezdzcy(rs.getInt("id_jezdzcy"));
                 statystyki.setKurs(rs.getDouble("kurs"));
                 statystyki.setWynikKonia(rs.getInt("wynik_konia"));
 
                 horseStats.add(statystyki);
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -223,13 +242,16 @@ public class AdminMenuController {
         } else {
             ObservableList<StatystykiKonia> filteredData = FXCollections.observableArrayList();
             for (StatystykiKonia stats : horseStats) {
-                if (stats.getKon().getImieKonia().toLowerCase().contains(filter.toLowerCase())) {
+                // Zakładając, że filtrujemy po ID konia, które jest typu Integer
+                String idKoniaString = Integer.toString(stats.getIdKonia());
+                if (idKoniaString.contains(filter)) {
                     filteredData.add(stats);
                 }
             }
             tableHorseStats.setItems(filteredData);
         }
     }
+
 
     @FXML
     private void handleConfirmWin(ActionEvent event) {
@@ -246,7 +268,7 @@ public class AdminMenuController {
             while (rs.next()) {
                 Kupon kupon = new Kupon();
                 kupon.setIdKuponu( rs.getInt("id_kuponu"));
-                kupon.setIdUdzialu( rs.getInt("id_udziału"));
+                kupon.setIdUdzialu( rs.getInt("id_udzialu"));
                 kupon.setKwota(rs.getDouble("kwota"));
                 kupon.setKurs(rs.getDouble("kurs"));
                 kupon.setStatusKuponu(rs.getBoolean("status_kuponu"));
@@ -264,10 +286,19 @@ public class AdminMenuController {
     @FXML
     public void initialize() {
 
-        idKuponuColumn.setCellValueFactory(new PropertyValueFactory<>("idKuponu"));
         idUdzialuColumn.setCellValueFactory(new PropertyValueFactory<>("idUdzialu"));
+        idKoniaColumn.setCellValueFactory(new PropertyValueFactory<>("idKonia"));
+        idGonitwyColumn.setCellValueFactory(new PropertyValueFactory<>("idGonitwy"));
+        idJezdzcyColumn.setCellValueFactory(new PropertyValueFactory<>("idJezdzcy"));
+        kursWinKuponyColumn.setCellValueFactory(new PropertyValueFactory<>("kurs"));
+        wynikKoniaColumn.setCellValueFactory(new PropertyValueFactory<>("wynikKonia"));
+
+        idKuponuColumn.setCellValueFactory(new PropertyValueFactory<>("idKuponu"));
+        idUdzialuKuponColumn.setCellValueFactory(new PropertyValueFactory<>("idUdzialu"));
         kwotaColumn.setCellValueFactory(new PropertyValueFactory<>("kwota"));
-        kursColumn.setCellValueFactory(new PropertyValueFactory<>("kurs"));
+        kursWinKuponyColumn.setCellValueFactory(new PropertyValueFactory<>("kurs"));
+        statusKuponu.setCellValueFactory(new PropertyValueFactory<>("statusKuponu"));
+        idUzytkownika.setCellValueFactory(new PropertyValueFactory<>("idUzytkownika"));
 
         actionColumn.setCellFactory(param -> new TableCell<Kupon, Void>() {
             private final Button btn = new Button("Potwierdź");
@@ -304,7 +335,7 @@ public class AdminMenuController {
             while (rs.next()) {
                 Kupon kupon = new Kupon();
                 kupon.setIdKuponu( rs.getInt("id_kuponu"));
-                kupon.setIdUdzialu( rs.getInt("id_udziału"));
+                kupon.setIdUdzialu( rs.getInt("id_udzialu"));
                 kupon.setKwota(rs.getDouble("kwota"));
                 kupon.setKurs(rs.getDouble("kurs"));
                 kupon.setStatusKuponu(rs.getBoolean("status_kuponu"));
