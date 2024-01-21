@@ -183,10 +183,15 @@ public class UserMenuController implements Initializable {
     private void historyClick(ActionEvent actionEvent){
 
     }
+    private void historyManage(){
+
+    }
     Label startInfo = new Label("Wybierz gonitwę do rozegrania");
+    Label raceOutcome = new Label("");
 
     @FXML
     private void startRaceClick(ActionEvent actionEvent){
+        raceOutcome.setText("");
         startRaceManage(true);
         searchManage(false);
         placeBetManage(false);
@@ -196,6 +201,10 @@ public class UserMenuController implements Initializable {
             AnchorPane.setLeftAnchor(startInfo, 229.0);
             AnchorPane.setRightAnchor(startInfo, 121.0);
 
+            AnchorPane.setTopAnchor(raceOutcome, 205.0);
+            AnchorPane.setLeftAnchor(raceOutcome, 229.0);
+            AnchorPane.setRightAnchor(raceOutcome, 121.0);
+
             AnchorPane.setTopAnchor(startRdy, 135.0);
             AnchorPane.setLeftAnchor(startRdy, 229.0);
             AnchorPane.setRightAnchor(startRdy, 121.0);
@@ -204,9 +213,12 @@ public class UserMenuController implements Initializable {
             AnchorPane.setLeftAnchor(start, 308.0);
             AnchorPane.setRightAnchor(start, 200.0);
             startInfo.setAlignment(Pos.CENTER);
+            raceOutcome.setAlignment(Pos.CENTER);
+
             anchorPane.getChildren().add(startInfo);
             anchorPane.getChildren().add(startRdy);
             anchorPane.getChildren().add(start);
+            anchorPane.getChildren().add(raceOutcome);
         }
         ObservableList<String> race = FXCollections.observableArrayList();
         ArrayList<Integer> idx = new ArrayList<>();
@@ -232,15 +244,18 @@ public class UserMenuController implements Initializable {
             try {
                 int i = startRdy.getSelectionModel().getSelectedIndex();
                 con = getConnection("jdbc:postgresql://localhost:5432/HorseRace", "administrator", "admin");
-                String sql = "SELECT id_udzialu, kurs FROM udzial_w_gonitwach WHERE id_gonitwy = ?;";
+                String sql = "SELECT imie_konia, id_udzialu, kurs FROM udzial_w_gonitwach INNER JOIN public.konie k on udzial_w_gonitwach.id_konia = k.id_konia WHERE id_gonitwy = ?;";
                 PreparedStatement prp = con.prepareStatement(sql);
                 prp.setInt(1,idx.get(i));
                 ResultSet rs = prp.executeQuery();
                 ArrayList<Integer> udzial = new ArrayList<>();
+                ArrayList<String> names = new ArrayList<>();
                 while(rs.next()){
+                    names.add(rs.getString("imie_konia"));
                     udzial.add(rs.getInt("id_udzialu"));
                 }
                 Collections.shuffle(udzial);
+                raceOutcome.setText(names.get(0)+" - "+ udzial.get(0)+"\n"+names.get(1)+" - "+ udzial.get(1)+"\n"+names.get(2)+" - "+ udzial.get(2)+"\n"+names.get(3)+" - "+ udzial.get(3)+"\n"+names.get(4)+" - "+ udzial.get(4));
                 int winId = udzial.get(0);
                 for(int j = 0; j< udzial.size();j++){
                     String sql2 = "UPDATE udzial_w_gonitwach SET wynik_konia = ? WHERE id_udzialu = ?;";
@@ -286,6 +301,7 @@ public class UserMenuController implements Initializable {
         startRdy.setVisible(vis);
         start.setVisible(vis);
         startInfo.setVisible(vis);
+        raceOutcome.setVisible(vis);
     }
 
     @FXML
