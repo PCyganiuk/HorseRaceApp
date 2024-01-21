@@ -6,5 +6,6 @@ module com.example.horseraceapp {
 
 
     opens com.example.horseraceapp to javafx.fxml;
+    opens dataAccess to javafx.fxml, javafx.base;
     exports com.example.horseraceapp;
 }
