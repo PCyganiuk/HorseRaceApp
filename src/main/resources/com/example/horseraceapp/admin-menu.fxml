@@ -14,12 +14,64 @@
             <TextField fx:id="rasa_konia" promptText="Rasa konia"/>
             <TextField fx:id="plec_konia" promptText="Plec konia"/>
             <DatePicker fx:id="data_urodzenia" promptText="data urodzenia"/>
-            <Button fx:id="addHorseButton" onAction="#handleAddRemoveHorse" text="Dodaj konia"/>
+            <Button fx:id="addHorseButton" onAction="#handleAddHorse" text="Dodaj konia"/>
+         </children>
+      </VBox>
+
+      <VBox fx:id="removeHorseVBox" layoutX="200.0" layoutY="20.0" spacing="10.0" visible="false">
+         <children>
+            <TableView fx:id="tableHorses" prefHeight="200.0" prefWidth="580.0">
+               <columns>
+                  <TableColumn fx:id="idKoniaColumnn" text="ID Konia">
+                     <cellValueFactory><PropertyValueFactory property="id" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="imieKoniaColumn" text="Imię Konia">
+                     <cellValueFactory><PropertyValueFactory property="imieKonia" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="dataUrodzeniaColumn" text="Data Urodzenia">
+                     <cellValueFactory><PropertyValueFactory property="dataUrodzenia" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="rasaKoniaColumn" text="Rasa Konia">
+                     <cellValueFactory><PropertyValueFactory property="rasaKonia" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="plecKoniaColumn" text="Płeć Konia">
+                     <cellValueFactory><PropertyValueFactory property="plecKonia" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="removeHorseColumn" text="Usuń">
+                     <!-- Komórki dla tej kolumny będą ustawione w kontrolerze -->
+                  </TableColumn>
+               </columns>
+            </TableView>
+            <Button text="Załaduj konie" onAction="#loadHorses" />
+            <Button fx:id="removeHorseButton" onAction="#removeHorse" text="Usuń konia"/>
+         </children>
+      </VBox>
+      <VBox fx:id="harmonogramVBox" layoutX="200.0" layoutY="20.0" spacing="10.0" visible="false">
+         <children>
+            <TableView fx:id="tableHarmonogram" prefHeight="200.0" prefWidth="580.0">
+               <columns>
+                  <TableColumn fx:id="idGonitwyColumnHarm" text="ID Gonitwy">
+                     <cellValueFactory><PropertyValueFactory property="idGonitwy" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="sezonColumnHarm" text="Sezon">
+                     <cellValueFactory><PropertyValueFactory property="sezon" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="opisGonitwyColumnHarm" text="Opis Gonitwy">
+                     <cellValueFactory><PropertyValueFactory property="opisGonitwy" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="dataWysciguColumnHarm" text="Data Wyścigu">
+                     <cellValueFactory><PropertyValueFactory property="dataWyscigu" /></cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="czasColumnHarm" text="Czas">
+                     <cellValueFactory><PropertyValueFactory property="czas" /></cellValueFactory>
+                  </TableColumn>
+               </columns>
+            </TableView>
          </children>
       </VBox>
       <VBox fx:id="statsVBox" layoutX="200.0" layoutY="200.0" spacing="10.0" visible="false">
          <children>
-            <TextField fx:id="searchField" promptText="Wyszukaj konia" maxWidth="200.0"/>
+            <TextField fx:id="searchField" promptText="Wyszukaj id konia" maxWidth="200.0"/>
 
             <TableView fx:id="tableHorseStats" prefHeight="200.0" prefWidth="580.0">
                <columns>
@@ -31,7 +83,11 @@
                   <TableColumn fx:id="wynikKoniaColumn" text="Wynik Konia" />
                </columns>
             </TableView>
-            <TableView fx:id="tableViewWinKupony">
+         </children>
+      </VBox>
+      <VBox fx:id="winKuponyVBox" layoutX="200.0" layoutY="200.0" spacing="10.0" style="-fx-background-color: yellow;" visible="false">
+         <children>
+            <TableView fx:id="tableViewWinKupony" prefHeight="200.0" prefWidth="580.0">
                <columns>
                   <TableColumn fx:id="idKuponuColumn" text="ID Kuponu">
                      <cellValueFactory><PropertyValueFactory property="idKuponu" /></cellValueFactory>
@@ -46,9 +102,9 @@
                      <cellValueFactory><PropertyValueFactory property="kurs" /></cellValueFactory>
                   </TableColumn>
                   <TableColumn fx:id="statusKuponu" text="statusKuponu">
-                     <cellValueFactory><PropertyValueFactory property="kurs" /></cellValueFactory>
+                     <cellValueFactory><PropertyValueFactory property="statusKuponu" /></cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="idUzytkownika" text="ID Uzytkownika">
+                  <TableColumn fx:id="idUzytkownikaKupon" text="ID Uzytkownika">
                      <cellValueFactory><PropertyValueFactory property="idUzytkownika" /></cellValueFactory>
                   </TableColumn>
                   <TableColumn fx:id="actionColumn" text="Akcje" />
@@ -56,16 +112,17 @@
             </TableView>
          </children>
       </VBox>
+
       <VBox prefHeight="400.0" prefWidth="200.0" spacing="10.0" style="-fx-background-color: #336699;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label alignment="CENTER" prefHeight="46.0" prefWidth="208.0" style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;" text="Menu Admina" />
             <Label fx:id="adminNick" prefHeight="17.0" prefWidth="125.0" text="Admin Nick" />
             <Label fx:id="money" prefHeight="17.0" prefWidth="133.0" text="Stan Konta:" />
-            <Button fx:id="addRemoveHorseButton" onAction="#showAddHorseInterface" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Dodawanie/Usuwanie Koni" />
+            <Button fx:id="handleAddHorseButton" onAction="#showAddHorseInterface" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Dodawanie" />
+            <Button fx:id="removeButton" onAction="#loadHorses" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Usuwanie Koni" />
             <Button fx:id="scheduleButton" onAction="#handleSchedule" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Układanie Harmonogramu" />
             <Button fx:id="horseStatsButton" onAction="#handleHorseStats" prefWidth="160.0" style="-fx-background-color: #f0f0f0;" text="Przeglądanie Statystyk Koni" />
-            <Button fx:id="confirmWinButton" onAction="#handleConfirmWin" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Potwierdzenie Wygranej" />
-            <Button fx:id="controlOddsButton" onAction="#handleControlOdds" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Kontrolowanie Kursów" />
+            <Button fx:id="confirmWinButton" onAction="#loadKupony" prefWidth="200.0" style="-fx-background-color: #f0f0f0;" text="Potwierdzenie Wygranej" />
 
          </children>
          <padding>

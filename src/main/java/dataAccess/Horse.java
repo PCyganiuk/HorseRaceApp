@@ -1,61 +1,79 @@
 package dataAccess;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 import java.time.LocalDate;
 
 public class Horse extends Entity {
-    private String name;
-    private int id;
-    private String imieKonia;
-    private LocalDate data_urodzenia;
-    private String plec_konia;
-    private String rasa_konia;
+
+    private SimpleIntegerProperty idKonia =new SimpleIntegerProperty(this, "id");
+    private SimpleStringProperty imieKonia= new SimpleStringProperty(this, "imieKonia");
+    private ObjectProperty<LocalDate> dataUrodzenia = new SimpleObjectProperty<>(this, "data_urodzenia");
+
+    private SimpleStringProperty plecKonia = new SimpleStringProperty(this, "plec_konia");
+    private SimpleStringProperty rasaKonia = new SimpleStringProperty(this, "rasa_konia");
+
+    @Override
+    public int getIdKonia() {
+        return idKonia.get();
+    }
+
+    public SimpleIntegerProperty idKoniaProperty() {
+        return idKonia;
+    }
+
+    public void setIdKonia(int idKonia) {
+        this.idKonia.set(idKonia);
+    }
 
     public String getImieKonia() {
+        return imieKonia.get();
+    }
+
+    public SimpleStringProperty imieKoniaProperty() {
         return imieKonia;
     }
 
     public void setImieKonia(String imieKonia) {
-        this.imieKonia = imieKonia;
+        this.imieKonia.set(imieKonia);
     }
 
-    public LocalDate getData_urodzenia() {
-        return data_urodzenia;
+    public LocalDate getDataUrodzenia() {
+        return dataUrodzenia.get();
     }
 
-    public void setData_urodzenia(LocalDate data_urodzenia) {
-        this.data_urodzenia = data_urodzenia;
+    public ObjectProperty<LocalDate> dataUrodzeniaProperty() {
+        return dataUrodzenia;
     }
 
-    public String getPlec_konia() {
-        return plec_konia;
+    public void setDataUrodzenia(LocalDate dataUrodzenia) {
+        this.dataUrodzenia.set(dataUrodzenia);
     }
 
-    public void setPlec_konia(String plec_konia) {
-        this.plec_konia = plec_konia;
+    public String getPlecKonia() {
+        return plecKonia.get();
     }
 
-    public String getName() {
-        return name;
+    public SimpleStringProperty plecKoniaProperty() {
+        return plecKonia;
     }
 
-    public String getRasa_konia() {
-        return rasa_konia;
+    public void setPlecKonia(String plecKonia) {
+        this.plecKonia.set(plecKonia);
     }
 
-    public void setRasa_konia(String rasa_konia) {
-        this.rasa_konia = rasa_konia;
+    public String getRasaKonia() {
+        return rasaKonia.get();
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public SimpleStringProperty rasaKoniaProperty() {
+        return rasaKonia;
     }
 
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setRasaKonia(String rasaKonia) {
+        this.rasaKonia.set(rasaKonia);
     }
 }

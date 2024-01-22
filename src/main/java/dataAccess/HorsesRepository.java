@@ -20,11 +20,11 @@ public class HorsesRepository extends Repository<Horse> {
 
             while (rs.next()) {
                 Horse horse = new Horse();
-                horse.setId(rs.getInt("id_konia"));
+                horse.setIdKonia(rs.getInt("id_konia"));
                 horse.setImieKonia(rs.getString("imie_konia"));
-                horse.setData_urodzenia(rs.getDate("data_urodzenia").toLocalDate());
-                horse.setRasa_konia(rs.getString("rasa_konia"));
-                horse.setPlec_konia(rs.getString("plec_konia"));
+                horse.setDataUrodzenia(rs.getDate("data_urodzenia").toLocalDate());
+                horse.setRasaKonia(rs.getString("rasa_konia"));
+                horse.setPlecKonia(rs.getString("plec_konia"));
 
                 horses.add(horse);
             }
@@ -45,11 +45,11 @@ public class HorsesRepository extends Repository<Horse> {
 
             if (rs.next()) {
                 horse = new Horse();
-                horse.setId(rs.getInt("id_konia"));
+                horse.setIdKonia(rs.getInt("id_konia"));
                 horse.setImieKonia(rs.getString("imie_konia"));
-                horse.setData_urodzenia(rs.getDate("data_urodzenia").toLocalDate());
-                horse.setRasa_konia(rs.getString("rasa_konia"));
-                horse.setPlec_konia(rs.getString("plec_konia"));
+                horse.setDataUrodzenia(rs.getDate("data_urodzenia").toLocalDate());
+                horse.setRasaKonia(rs.getString("rasa_konia"));
+                horse.setPlecKonia(rs.getString("plec_konia"));
 
             }
         } catch (SQLException e) {
@@ -67,9 +67,9 @@ public class HorsesRepository extends Repository<Horse> {
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, entity.getImieKonia());
-            pstmt.setDate(2, Date.valueOf(entity.getData_urodzenia())); // zakładając, że getDataUrodzenia zwraca java.time.LocalDate
-            pstmt.setString(3, entity.getRasa_konia());
-            pstmt.setString(4, entity.getPlec_konia());
+            pstmt.setDate(2, Date.valueOf(entity.getDataUrodzenia())); // zakładając, że getDataUrodzenia zwraca java.time.LocalDate
+            pstmt.setString(3, entity.getRasaKonia());
+            pstmt.setString(4, entity.getPlecKonia());
 
             pstmt.executeUpdate();
         }
@@ -82,10 +82,10 @@ public class HorsesRepository extends Repository<Horse> {
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, entity.getImieKonia());
-            pstmt.setDate(2, Date.valueOf(entity.getData_urodzenia()));
-            pstmt.setString(3, entity.getRasa_konia());
-            pstmt.setString(4, entity.getPlec_konia());
-            pstmt.setInt(5, entity.getId());
+            pstmt.setDate(2, Date.valueOf(entity.getDataUrodzenia()));
+            pstmt.setString(3, entity.getRasaKonia());
+            pstmt.setString(4, entity.getPlecKonia());
+            pstmt.setInt(5, entity.getIdKonia());
 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows == 0) {
