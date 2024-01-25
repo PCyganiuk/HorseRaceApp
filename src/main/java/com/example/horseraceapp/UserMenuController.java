@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +53,8 @@ public class UserMenuController implements Initializable {
     String username;
     Integer user_id;
     public Double balance;
+    private final DecimalFormat df = new DecimalFormat("0.00");
+
     private final TextFormatter<String> numericFormat = new TextFormatter<>(change -> {
         String newText = change.getControlNewText();
         if (newText.matches("[0-9]*\\.?[0-9]*")) {
@@ -89,6 +92,7 @@ public class UserMenuController implements Initializable {
         placeBetManage(true);
         searchManage(false);
         topAccManage(false);
+        historyManage(false);
         startRaceManage(false);
         betList.getItems().clear();
         initBetScreen("");
@@ -108,6 +112,7 @@ public class UserMenuController implements Initializable {
     @FXML
     private void searchClick(){
         searchManage(true);
+        historyManage(false);
         placeBetManage(false);
         topAccManage(false);
         startRaceManage(false);
@@ -143,6 +148,7 @@ public class UserMenuController implements Initializable {
     @FXML
     private void topAccClick(){
         searchManage(false);
+        historyManage(false);
         placeBetManage(false);
         startRaceManage(false);
         topAccManage(true);
@@ -179,12 +185,43 @@ public class UserMenuController implements Initializable {
         top.setVisible(vis);
         amount.setText("");
     }
+    ListView<String> couponHistory = new ListView<>();
     @FXML
-    private void historyClick(ActionEvent actionEvent){
+    private void historyClick(ActionEvent actionEvent) throws SQLException {
+        historyManage(true);
+        startRaceManage(false);
+        searchManage(false);
+        placeBetManage(false);
+        topAccManage(false);
+        if(!anchorPane.getChildren().contains(couponHistory)) {
+            AnchorPane.setTopAnchor(couponHistory, 112.0);
+            AnchorPane.setBottomAnchor(couponHistory, 6.0);
+            AnchorPane.setLeftAnchor(couponHistory, 125.0);
+            AnchorPane.setRightAnchor(couponHistory, 11.0);
+            anchorPane.getChildren().add(couponHistory);
+        }
+        ObservableList<String> coupList = FXCollections.observableArrayList();
+        con = getConnection("jdbc:postgresql://localhost:5432/HorseRace", "uzytkownik", "user123");
+        String sql = "SELECT k.imie_konia,g.opis_gonitwy ,kwota,kupony.kurs,status_kuponu FROM kupony INNER JOIN public.udzial_w_gonitwach uwg on kupony.id_udzialu = uwg.id_udzialu INNER JOIN public.konie k on uwg.id_konia = k.id_konia INNER JOIN public.gonitwy g on uwg.id_gonitwy = g.id_gonitwy WHERE id_uzytkownika = ?";
+        PreparedStatement prp = con.prepareStatement(sql);
+        prp.setInt(1,user_id);
+        ResultSet rs = prp.executeQuery();
+        while(rs.next()){
+            if(rs.getBoolean("status_kuponu")) {
+                double suma = rs.getDouble("kurs")*rs.getDouble("kwota");
+                String roundedNumber = df.format(suma);
+                coupList.add(rs.getString("imie_konia")+"•"+rs.getString("opis_gonitwy")+"• +" +roundedNumber+"zł");
+            }
+            else if(!rs.getBoolean("status_kuponu")){
 
+                coupList.add(rs.getString("imie_konia")+"•"+rs.getString("opis_gonitwy")+"• -"+df.format(rs.getDouble("kwota"))+"zł");
+            }
+        }
+        couponHistory.setItems(coupList);
     }
-    private void historyManage(){
-
+    private void historyManage(boolean vis){
+        history.setDisable(vis);
+        couponHistory.setVisible(vis);
     }
     Label startInfo = new Label("Wybierz gonitwę do rozegrania");
     Label raceOutcome = new Label("");
@@ -194,6 +231,7 @@ public class UserMenuController implements Initializable {
         raceOutcome.setText("");
         startRaceManage(true);
         searchManage(false);
+        historyManage(false);
         placeBetManage(false);
         topAccManage(false);
         if(!anchorPane.getChildren().contains(startRdy)) {
